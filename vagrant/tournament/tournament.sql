@@ -6,4 +6,53 @@
 -- You can write comments in this file by starting them with two dashes, like
 -- these lines here.
 
+--Connect to Database
+  \c tournament
 
+--Drop view if exists
+
+  DROP VIEW IF EXISTS WINS CASCADE;
+  DROP VIEW IF EXISTS TOTAL_MATCHES CASCADE ;
+  DROP VIEW IF EXISTS PLAYER_STANDINGS CASCADE;
+
+--Drop old tables
+
+  DROP TABLE IF EXISTS Matches CASCADE ;
+  DROP TABLE IF EXISTS Players CASCADE ;
+
+
+--Create table for player details
+  CREATE TABLE Players (
+	id SERIAL primary key,
+	player_name varchar(255)
+  );
+
+--Create Matches Table
+  CREATE TABLE Matches (
+ 	id SERIAL primary key,
+ 	player int references Players(id),
+        opp_player int references Players(id),
+	result int
+  );
+
+--Create wins view
+  CREATE VIEW wins as 
+	SELECT Players.id, COUNT(Matches.opp_player) AS n 
+	FROM Players
+	LEFT JOIN (SELECT * FROM Matches WHERE result>0) as Matches
+	ON Players.id = Matches.player
+	GROUP BY Players.id;
+
+--Create total_matches view
+  CREATE VIEW total_matches as
+	SELECT Players.id, Count(Matches.opp_player) AS n 
+	FROM Players
+	LEFT JOIN Matches
+	ON Players.id = Matches.player
+	GROUP BY Players.id;
+--Create player_standings view 
+  CREATE VIEW player_standings as
+	SELECT Players.id,Players.player_name,CAST (wins.n AS INTEGER) as wins,
+        CAST(total_matches.n as INTEGER) as matches 
+	FROM Players,total_matches,Wins
+	WHERE Players.id = Wins.id and Wins.id = total_matches.id;
