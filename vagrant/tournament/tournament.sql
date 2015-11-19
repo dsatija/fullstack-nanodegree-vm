@@ -7,6 +7,8 @@
 -- these lines here.
 
 --Connect to Database
+  DROP DATABASE IF EXISTS tournament;
+  CREATE DATABASE tournament;
   \c tournament
 
 --Drop view if exists
@@ -24,15 +26,16 @@
 --Create table for player details
   CREATE TABLE Players (
 	id SERIAL primary key,
-	player_name varchar(255)
+	player_name varchar(255) NOT NULL
   );
 
 --Create Matches Table
   CREATE TABLE Matches (
  	id SERIAL primary key,
- 	player int references Players(id),
-        opp_player int references Players(id),
+ 	player int references Players(id) ON DELETE CASCADE,
+        opp_player int references Players(id) ON DELETE CASCADE,
 	result int
+	CHECK (player <> opp_player)
   );
 
 --Create wins view
@@ -55,4 +58,5 @@
 	SELECT Players.id,Players.player_name,CAST (wins.n AS INTEGER) as wins,
         CAST(total_matches.n as INTEGER) as matches 
 	FROM Players,total_matches,Wins
-	WHERE Players.id = Wins.id and Wins.id = total_matches.id;
+	WHERE Players.id = Wins.id and Wins.id = total_matches.id
+	ORDER BY wins DESC;

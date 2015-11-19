@@ -1,8 +1,8 @@
 Udacity Full Stack Web Developer Nanodegree Project 2
  
-Swiss Tournament Results
+This project serves the purpose of ranking the swiss tournament players and provide results.
 
-Files
+Files-
 
 tournament.py -- implementation of a Swiss-system tournament
 tournament.sql -- tables and views definitions for the tournament project.
@@ -10,12 +10,20 @@ tournament_test.py -- Test cases for tournament.py
 
 Usage
 
-Make sure database "tournament" exists
+Below are the requirements for running this project:
+1)Postgresql
+2)Python(2.7 or 3.0) installation
+3)Setup using vagrant and virtual box can be done.
 
 Command to run the program:
-
+1)copy the contents of this repository to virtual machine forder /vagrant/tournment/
+2) create the database ,tables and views used in this project by running--
+psql -f tournament.sql
+3)run the application using below command:
 vagrant@vagrant-ubuntu-trusty-32:/vagrant/tournament$ 
 python tournament_test.py
+
+RESULTS:
 
 vagrant@vagrant-ubuntu-trusty-32:/vagrant/tournament$ python tournament_test.py 
 1. Old matches can be deleted.
